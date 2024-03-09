@@ -16,6 +16,11 @@ const populateEvent = async (query: any) => {
     })
     .populate({ path: "category", model: Category, select: "_id name" });
 };
+// const populateEvent = (query: any) => {
+//   return query
+//     .populate({ path: 'organizer', model: User, select: '_id firstName lastName' })
+//     .populate({ path: 'category', model: Category, select: '_id name' })
+// }
 
 export const createEvent = async ({
   event,
@@ -59,6 +64,8 @@ export const getEventById = async (eventId: string) => {
     handleError(error);
   }
 };
+
+
 export const getAllEvents = async ({
   query,
   limit = 6,
@@ -70,7 +77,7 @@ export const getAllEvents = async ({
 
     const conditions = {};
 
-    const eventQuery = await Event.find(conditions)
+    const eventQuery = Event.find(conditions)
       .sort({ createdAt: "desc" })
       .skip(0)
       .limit(limit);
@@ -83,6 +90,6 @@ export const getAllEvents = async ({
       totalPages: Math.ceil(eventsCount / limit),
     };
   } catch (error) {
-    handleError(error);
+    handleError(error);    
   }
 };
