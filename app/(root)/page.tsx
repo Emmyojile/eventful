@@ -11,6 +11,7 @@ export default async function Home() {
     page: 1,
     limit: 6,
   });
+  console.log(events);
   
 
   return (
