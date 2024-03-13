@@ -3,6 +3,7 @@ import { Schema, model, models, Document } from 'mongoose'
 export interface IOrder extends Document {
   createdAt: Date
   stripeId: string
+  paystackId: string
   totalAmount: string
   event: {
     _id: string
@@ -30,6 +31,11 @@ const OrderSchema = new Schema({
     default: Date.now,
   },
   stripeId: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  paystackId: {
     type: String,
     required: true,
     unique: true,
