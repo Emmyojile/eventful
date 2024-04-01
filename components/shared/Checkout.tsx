@@ -35,21 +35,20 @@ const onClose = () => {
 
 const Checkout = ({ event, userId }: { event: IEvent; userId: string }) => {
   const initializePayment = usePaystackPayment(config);
-  
+
   const onCheckout = async () => {
+    console.log("Event data:", event); // Log entire event object
+    console.log("Logged in User:", userId); // Log entire event object
+
     config.title = event.title; // Access event title correctly
 
     // Ensure event.price exists and is a number
-    if (typeof event.price !== "number") {
-      throw new Error("Event price must be a number");
+    const price = parseFloat(event.price); // Parse the string to a number
+    if (isNaN(price)) {
+      throw new Error("Event price is invalid. Please check event data.");
     }
 
-    const price = event?.price; // Use optional chaining
-    if (!price) {
-      throw new Error("Event price is missing or not a number");
-    }
-
-    const priceInKobo = price * 100; // Convert price to kobo
+    const priceInKobo = price * 100; // Now use the converted number
     config.amount = priceInKobo;
 
     try {
