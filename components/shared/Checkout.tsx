@@ -4,6 +4,7 @@ import { IEvent } from "@/lib/database/models/event.model";
 import React from "react";
 import { Button } from "../ui/button";
 import { usePaystackPayment } from "react-paystack";
+import { useUser } from "@clerk/nextjs";
 
 const config = {
   reference: new Date().getTime().toString(),
@@ -12,15 +13,6 @@ const config = {
   title: "", // Initialize as undefined
   currency: "NGN",
   amount: 0, // Initialize as undefined,
-  // metadata: {
-  //   custom_fields: [
-  //     {
-  //       display_name: "Event Title", // Descriptive display name
-  //       variable_name: "event_title",
-  //       value: event.title, // Access event title
-  //     },
-  //   ],
-  // },
 };
 
 const onSuccess = (reference: string) => {
@@ -36,9 +28,21 @@ const onClose = () => {
 const Checkout = ({ event, userId }: { event: IEvent; userId: string }) => {
   const initializePayment = usePaystackPayment(config);
 
+  const { user } = useUser();
+
   const onCheckout = async () => {
     console.log("Event data:", event); // Log entire event object
-    console.log("Logged in User:", userId); // Log entire event object
+    if (!user?.emailAddresses) {
+      throw new Error(
+        "User email address not found. Please ensure a valid email is associated with your Clerk account."
+      );
+    }
+
+    const email = user.emailAddresses[0].emailAddress;
+
+    // config.email = email;
+
+    console.log("User Email:", email);
 
     config.title = event.title; // Access event title correctly
 
