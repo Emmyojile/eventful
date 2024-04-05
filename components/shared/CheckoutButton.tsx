@@ -9,6 +9,10 @@ import Checkout from "./Checkout";
 
 const CheckoutButton = ({ event }: { event: IEvent }) => {
   const { user } = useUser();
+  const userEmail = user?.emailAddresses[0].emailAddress;
+
+  // console.log("User Email:", userEmail);
+  
   const userId = user?.publicMetadata.userId as string;
   const hasEventFinished = new Date(event.endDateTime) < new Date();
 
@@ -25,9 +29,11 @@ const CheckoutButton = ({ event }: { event: IEvent }) => {
               <Link href="/sign-in">Get Tickets</Link>
             </Button>
           </SignedOut>
-          <SignedIn>
-            <Checkout event={event} userId={userId} />
-          </SignedIn>
+          {userEmail && (
+            <SignedIn>
+              <Checkout event={event} userId={userId} userEmail={userEmail} />
+            </SignedIn>
+          )}
         </>
       )}
     </div>

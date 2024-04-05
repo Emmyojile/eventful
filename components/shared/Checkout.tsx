@@ -1,14 +1,12 @@
 "use client";
-
 import { IEvent } from "@/lib/database/models/event.model";
 import React from "react";
 import { Button } from "../ui/button";
 import { usePaystackPayment } from "react-paystack";
-import { useUser } from "@clerk/nextjs";
 
 const config = {
   reference: new Date().getTime().toString(),
-  email: "emmy@example.com",
+  email: "",  // Initialize as undefined
   publicKey: "pk_test_6eed9e8bff39506d1bd2a648268573e89cf00ec6",
   title: "", // Initialize as undefined
   currency: "NGN",
@@ -25,44 +23,36 @@ const onClose = () => {
   console.log("Payment closed");
 };
 
-const Checkout = ({ event, userId }: { event: IEvent; userId: string }) => {
+const Checkout = ({ event, userId, userEmail }: { event: IEvent; userId: string; userEmail: string }) => {
   const initializePayment = usePaystackPayment(config);
-
-  const { user } = useUser();
 
   const onCheckout = async () => {
     console.log("Event data:", event); // Log entire event object
-    if (!user?.emailAddresses) {
-      throw new Error(
-        "User email address not found. Please ensure a valid email is associated with your Clerk account."
-      );
-    }
 
-    const email = user.emailAddresses[0].emailAddress;
-
-    // config.email = email;
-
-    console.log("User Email:", email);
-
-    config.title = event.title; // Access event title correctly
+    // Access event title correctly
+    config.title = event.title; 
 
     // Ensure event.price exists and is a number
     const price = parseFloat(event.price); // Parse the string to a number
     if (isNaN(price)) {
       throw new Error("Event price is invalid. Please check event data.");
     }
-
     const priceInKobo = price * 100; // Now use the converted number
     config.amount = priceInKobo;
 
+    // Get Email user purchasing
+    config.email = userEmail
+
     try {
       await initializePayment({
-        onSuccess, // Assign onSuccess function directly
-        onClose, // Assign onClose function directly
+        // Assign onSuccess function directly
+        onSuccess, 
+        // Assign onClose function directly
+        onClose, 
       });
     } catch (error) {
-      console.error("Payment failed:", error);
       // Handle payment errors
+      console.error("Payment failed:", error);
     } finally {
       onClose(); // Call onClose here for closure handling
     }
