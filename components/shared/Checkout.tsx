@@ -37,7 +37,8 @@ const Checkout = ({ event, userId, userEmail }: { event: IEvent; userId: string;
     if (isNaN(price)) {
       throw new Error("Event price is invalid. Please check event data.");
     }
-    const priceInKobo = price * 100; // Now use the converted number
+    // Now use the converted number
+    const priceInKobo = price * 100; 
     config.amount = priceInKobo;
 
     // Get Email user purchasing
