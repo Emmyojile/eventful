@@ -113,13 +113,8 @@ export type CreateUserParams = {
   }
   
   export type CreateOrderParams = {
-    // reference: string; // Paystack reference code
-    // amount: number; // Amount in cents (convert if needed)
-    // customerId: string; // Paystack customer ID
     reference: string;
     amount: number;
-    customerId: string;
-    stripeId: string
     eventId: string
     buyerId: string
     totalAmount: string
