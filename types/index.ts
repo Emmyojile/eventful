@@ -114,12 +114,12 @@ export type CreateUserParams = {
   
   export type CreateOrderParams = {
     reference: string;
-    amount: number;
-    eventId: string
-    buyerId: string
-    totalAmount: string
-    createdAt: Date
-  }
+    eventId: string; // Assuming you want to store the eventId if available
+    buyerId: string;
+    totalAmount: string; // Assuming you want totalAmount as a string
+    createdAt: Date;
+    paystackId: string; // Maintain this property
+  };
   
   export type GetOrdersByEventParams = {
     eventId: string
