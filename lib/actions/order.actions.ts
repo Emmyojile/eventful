@@ -7,8 +7,7 @@ interface PaystackParams {
   callback_url?: string;
   metadata?:object
 }
-
-interface VerifyParams {
+~interface VerifyParams {
   reference: string;
 }
 
