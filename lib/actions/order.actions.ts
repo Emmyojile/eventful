@@ -7,7 +7,8 @@ interface PaystackParams {
   callback_url?: string;
   metadata?:object
 }
-~interface VerifyParams {
+
+interface VerifyParams {
   reference: string;
 }
 
@@ -22,8 +23,7 @@ const getCommonHeaders = () => ({
 
 //paystack function for initiating payment and generating redirection url
 
-export const paystackPay = async (
-  {
+export const paystackPay = async ({
   amount,
   email,
   currency,
@@ -47,7 +47,6 @@ export const paystackPay = async (
   try {
     const response = await fetch(`${url}/transaction/initialize`, options);
     const data = await response.json();
-    console.log("Payment details sent to Paystack:", paymentDetails);
     return data;
   } catch (error) {
     return error;
@@ -71,8 +70,6 @@ export const verifyPaystackTransaction = async ({ reference }: VerifyParams) => 
     return error;
   }
 };
-
-
 
 
 
