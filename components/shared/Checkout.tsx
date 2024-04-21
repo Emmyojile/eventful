@@ -8,9 +8,9 @@
 //   const [paymentProcessing, setPaymentProcessing] = useState(false);
 
 //   const onCheckout = async () => {
-    
+
 //     // Log entire event object
-//     console.log("Event data:", event); 
+//     console.log("Event data:", event);
 
 //     // Access event title correctly
 //     const price = parseFloat(event.price);
@@ -25,7 +25,7 @@
 //       amount: priceInKobo,
 //       email: userEmail,
 //       // Use event currency if available, otherwise default
-//       currency: "NGN", 
+//       currency: "NGN",
 //       // Add other relevant payment details here
 //       // You can potentially include callback_url and channels if needed
 //     };
@@ -71,24 +71,6 @@
 
 // export default Checkout;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 "use client";
 import { IEvent } from "@/lib/database/models/event.model";
 import React from "react";
@@ -97,7 +79,7 @@ import { usePaystackPayment } from "react-paystack";
 
 const config = {
   reference: new Date().getTime().toString(),
-  email: "",  // Initialize as undefined
+  email: "", // Initialize as undefined
   publicKey: "pk_test_6eed9e8bff39506d1bd2a648268573e89cf00ec6",
   title: "", // Initialize as undefined
   currency: "NGN",
@@ -114,14 +96,22 @@ const onClose = () => {
   console.log("Payment closed");
 };
 
-const Checkout = ({ event, userId, userEmail }: { event: IEvent; userId: string; userEmail: string }) => {
+const Checkout = ({
+  event,
+  userId,
+  userEmail,
+}: {
+  event: IEvent;
+  userId: string;
+  userEmail: string;
+}) => {
   const initializePayment = usePaystackPayment(config);
 
   const onCheckout = async () => {
     console.log("Event data:", event); // Log entire event object
 
     // Access event title correctly
-    config.title = event.title; 
+    config.title = event.title;
 
     // Ensure event.price exists and is a number
     const price = parseFloat(event.price); // Parse the string to a number
@@ -129,18 +119,18 @@ const Checkout = ({ event, userId, userEmail }: { event: IEvent; userId: string;
       throw new Error("Event price is invalid. Please check event data.");
     }
     // Now use the converted number
-    const priceInKobo = price * 100; 
+    const priceInKobo = price * 100;
     config.amount = priceInKobo;
 
     // Get Email user purchasing
-    config.email = userEmail
+    config.email = userEmail;
 
     try {
       await initializePayment({
         // Assign onSuccess function directly
-        onSuccess, 
+        onSuccess,
         // Assign onClose function directly
-        onClose, 
+        onClose,
       });
     } catch (error) {
       // Handle payment errors
@@ -169,4 +159,3 @@ const Checkout = ({ event, userId, userEmail }: { event: IEvent; userId: string;
 };
 
 export default Checkout;
-
