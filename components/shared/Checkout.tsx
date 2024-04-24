@@ -1,7 +1,8 @@
 "use client";
 import { IEvent } from "@/lib/database/models/event.model";
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "../ui/button";
+import { paystackPay } from "@/lib/actions/order.actions";
 
 
 const Checkout = ({
@@ -14,6 +15,25 @@ const Checkout = ({
   userEmail: string;
 }) => {
 
+  const [amount, setAmount] = useState<number>(500);
+  const [submitting, setSubmitting] = useState<boolean>(false);
+
+  const handlePayment = async (): Promise<void> => {
+    // Your code logic goes here
+    setSubmitting(true);
+    const paystackResponse = await paystackPay({
+      amount: amount, //amount to be transacted by paystack
+      email: "emmaojile99@gmail.com", //email of the person making the payment
+      currency: "NGN", //currency eg KES or USD if you are in kenya
+      callback_url: "http://localhost:3001/profile", //route where paystack will redirect with reference code after a successful payment
+      channels: ["mobile_money"], //channel to be used for making payment eg bank mobile_money
+    });
+    setSubmitting(false);
+    if (paystackResponse.status === true) {
+      window.location.href = paystackResponse.data.authorization_url; //extract the redirection and user it for redirecting the donor to the unique page generated for them to make payment
+    }
+  };
+
   return (
     <>
       {event.isFree ? (
@@ -22,6 +42,7 @@ const Checkout = ({
         </Button>
       ) : (
         <Button
+        onClick={handlePayment}
           className="bg-blue-700 text-white p-4 rounded-xl"
         >
           Pay with Paystack
